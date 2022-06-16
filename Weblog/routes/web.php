@@ -25,6 +25,11 @@ Route::get('/register', [
     'create'
 ])->name('user.create');
 
+Route::post('/register', [
+    UserController::class,
+    'register'
+])->name('user.register');
+
 Route::get('/signin', [
     UserController::class, 
     'signIn'

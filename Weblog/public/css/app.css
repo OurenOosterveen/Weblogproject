@@ -6,7 +6,8 @@
     border-radius:15px;
     background: rgb(5, 166, 219);
     padding: 3px;
-    margin: 3px;
+    margin: auto;
+    margin-top: 10px; 
     max-width: 33%;
     text-align: center;
 }
@@ -14,4 +15,8 @@
 .banner {
     background: rgb(5, 166, 219);
     text-align: right
+}
+
+.error {
+    color: red;
 }
