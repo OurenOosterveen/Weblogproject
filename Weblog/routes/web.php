@@ -15,11 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//
+//      POST ROUTES
+//
 Route::get('/', [
     PostController::class, 
     'index'
 ])->name('posts.index');
 
+
+
+// 
+//      USER ROUTES
+//
 Route::get('/register', [
     UserController::class, 
     'create'
