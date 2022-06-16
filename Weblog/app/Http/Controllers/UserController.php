@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -35,6 +36,33 @@ class UserController extends Controller
 
         $user->save();
 
+        return redirect(route('posts.index'));
+    }
+
+    public function login() {
+        $credentials = request()->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required'
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            request()->session()->regenerate();
+ 
+            return redirect(route('posts.index'));
+        }
+ 
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    public function logoutuser() {
+        Auth::logout();
+
+        request()->session()->invalidate();
+ 
+        request()->session()->regenerateToken();
+     
         return redirect(route('posts.index'));
     }
 }

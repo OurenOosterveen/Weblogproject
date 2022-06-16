@@ -23,14 +23,24 @@ Route::get('/', [
 Route::get('/register', [
     UserController::class, 
     'create'
-])->name('user.create');
+])->name('user.create')->middleware('guest');
 
 Route::post('/register', [
     UserController::class,
     'register'
-])->name('user.register');
+])->name('user.register')->middleware('guest');
 
 Route::get('/signin', [
     UserController::class, 
     'signIn'
-])->name('user.signin');
+])->name('user.signin')->middleware('guest');
+
+Route::post('/signin', [
+    UserController::class,
+    'login'
+])->name('user.login')->middleware('guest');
+
+Route::get('logout', [
+    UserController::class,
+    'logoutuser'
+])->name('user.logout')->middleware('auth');
