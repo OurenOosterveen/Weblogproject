@@ -75,6 +75,7 @@ class PostController extends Controller
     }
 
     public function delete(Post $post) {
+        $post->comments()->delete();
         $post->delete();
 
         return redirect(route('user.overview'));
