@@ -24,6 +24,16 @@ Route::get('/', [
     'index'
 ])->name('posts.index');
 
+Route::get('/create', [
+    PostController::class,
+    'create'
+])->name('posts.create');
+
+Route::post('/create', [
+    PostController::class,
+    'store'
+])->name('posts.store');
+
 
 
 // 
