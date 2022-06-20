@@ -45,6 +45,16 @@ Route::get('/post/edit/{post}', [
     'edit'
 ])->name('post.edit');
 
+Route::patch('/post/edit/{post}', [
+    PostController::class,
+    'update'
+])->name('post.update');
+
+Route::delete('/post/edit/{post}', [
+    PostController::class,
+    'delete'
+])->name('post.delete');
+
 // 
 //      COMMENT ROUTES
 //

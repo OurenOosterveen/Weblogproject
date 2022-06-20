@@ -57,4 +57,26 @@ class PostController extends Controller
             return redirect()->back();
         }
     }
+
+    public function update(Post $post) {
+        request()->validate([
+            'title' => 'required|min:5|max:255',
+            'body' => 'required|min:5|max:65535',
+            'is_premium' => ''
+        ]);
+
+        $post->update([
+            'title' => request('title'),
+            'body' => request('body'),
+            'is_premium' => request()->has('is_premium')
+        ]);
+
+        return redirect(route('user.overview'));
+    }
+
+    public function delete(Post $post) {
+        $post->delete();
+
+        return redirect(route('user.overview'));
+    }
 }
