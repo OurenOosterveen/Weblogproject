@@ -47,4 +47,14 @@ class PostController extends Controller
                 ->get()
         ]);
     }
+
+    public function edit(Post $post) {
+        if (auth()->id() == $post->user_id){
+            return view('posts/edit', [
+                'post' => $post
+            ]);
+        } else {
+            return redirect()->back();
+        }
+    }
 }

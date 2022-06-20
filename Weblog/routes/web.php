@@ -40,6 +40,11 @@ Route::get('/post/{post}', [
     'view'
 ])->name('post.view');
 
+Route::get('/post/edit/{post}', [
+    PostController::class,
+    'edit'
+])->name('post.edit');
+
 // 
 //      COMMENT ROUTES
 //
@@ -57,22 +62,27 @@ Route::get('/register', [
     'create'
 ])->name('user.create')->middleware('guest');
 
-Route::post('/register', [
+Route::post('/user/register', [
     UserController::class,
     'register'
 ])->name('user.register')->middleware('guest');
 
-Route::get('/signin', [
+Route::get('/user/signin', [
     UserController::class, 
     'signIn'
 ])->name('user.signin')->middleware('guest');
 
-Route::post('/signin', [
+Route::post('/user/signin', [
     UserController::class,
     'login'
 ])->name('user.login')->middleware('guest');
 
-Route::get('logout', [
+Route::get('/user/logout', [
     UserController::class,
     'logoutuser'
 ])->name('user.logout')->middleware('auth');
+
+Route::get('/user/overview', [
+    UserController::class,
+    'overview'
+])->name('user.overview');

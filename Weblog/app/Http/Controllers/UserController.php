@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,5 +65,14 @@ class UserController extends Controller
         request()->session()->regenerateToken();
      
         return redirect(route('posts.index'));
+    }
+
+    public function overview() {
+        return view('users/overview', [
+            'posts' => Post::where('user_id', Auth::id())
+                ->orderByDesc('created_at')
+                ->get(),
+            
+        ]);
     }
 }
