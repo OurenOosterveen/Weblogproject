@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,7 @@ class PostController extends Controller
 
     public function index() {
         return view('posts/index', [
-            'posts' => Post::with('user')->get()->sortByDesc('created_at')
+            'posts' => Post::all()->sortByDesc('created_at')
         ]);
     }
 
@@ -35,5 +36,15 @@ class PostController extends Controller
         $post->save();
 
         return redirect(route('posts.index'));
+    }
+
+    public function view(Post $post) {
+        return view('posts/view', [
+            'post' => $post,
+            'comments' => 
+                Comment::where('post_id', $post->id)
+                ->orderByDesc('created_at')
+                ->get()
+        ]);
     }
 }

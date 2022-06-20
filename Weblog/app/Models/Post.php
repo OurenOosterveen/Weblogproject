@@ -11,7 +11,13 @@ class Post extends Model
 
     protected $fillable = ['text', 'body', 'is_premium', 'user_id'];
 
+    protected $with = ['user'];
+
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }

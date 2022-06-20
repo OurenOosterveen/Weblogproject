@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,19 @@ Route::post('/create', [
     'store'
 ])->name('posts.store');
 
+Route::get('/post/{post}', [
+    PostController::class,
+    'view'
+])->name('post.view');
 
+// 
+//      COMMENT ROUTES
+//
+
+Route::post('/post/{post}', [
+    CommentController::class,
+    'post'
+])->name('comment.post');
 
 // 
 //      USER ROUTES

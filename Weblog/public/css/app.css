@@ -20,3 +20,19 @@
 .error {
     color: red;
 }
+
+.comments {
+    margin: auto;
+    margin-top: 10px; 
+    max-width: 33%;
+    text-align: center;
+}
+
+.comment-card {
+    margin: auto;
+    margin-top: 10px; 
+    padding: 5px;
+    border: black solid 1px;
+    border-radius: 15px;
+    text-align: left;
+}
