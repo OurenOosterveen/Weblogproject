@@ -24,4 +24,19 @@ class Post extends Model
     public function categories() {
         return $this->belongsToMany(Category::class);
     }
+
+    public function image() {
+        return $this->hasOne(Image::class);
+    }
+
+    public function scopeFilter($query, array $filters) {
+        if (isset($filters["category"])){
+            $categories = $filters["category"];
+            $query->whereHas('categories', function($query) use ($categories){
+                $query->whereIn('id', $categories);
+            });
+        } else {
+            dd($filters);
+        }
+    }
 }

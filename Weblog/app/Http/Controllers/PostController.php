@@ -14,9 +14,22 @@ class PostController extends Controller
 
     public function index() {
         return view('posts/index', [
-            'posts' => Post::all()->sortByDesc('created_at'),
+            'posts' => Post::latest()->get(),
             'categories' => Category::all()
         ]);
+
+        // Post::latest()->filter(request(['search']))->get()
+    }
+
+    public function filteredIndex() {
+        return view('posts/index', [
+            // 'posts' => Post::all()->sortByDesc('created_at'),
+            // 'categories' => Category::all()
+            'posts' => Post::latest()->filter(request(['category']))->get(),
+            'categories' => Category::all()
+        ]);
+
+        // Post::latest()->filter(request(['search']))->get()
     }
 
     public function create() {

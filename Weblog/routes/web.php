@@ -26,6 +26,12 @@ Route::get('/', [
     'index'
 ])->name('posts.index');
 
+Route::post('/', [
+    PostController::class,
+    'filteredIndex'
+]
+)->name('posts.index.filtered');
+
 Route::get('/create', [
     PostController::class,
     'create'
