@@ -13,10 +13,9 @@
     margin: auto;
     margin-top: 10px; 
     max-width: 33%;
+    overflow-wrap: break-word;
     text-align: center;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    
 }
 
 .banner {
