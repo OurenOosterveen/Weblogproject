@@ -29,7 +29,9 @@ class PostController extends Controller
         request()->validate([
             'title' => 'required|min:5|max:255',
             'body' => 'required|min:5|max:65535',
-            'is_premium' => ''
+            'is_premium' => '',
+            'category' => 'required|array',
+            'category.*' => 'required|exists:categories,id'
         ]);
 
         $post = new Post();
@@ -72,7 +74,9 @@ class PostController extends Controller
         request()->validate([
             'title' => 'required|min:5|max:255',
             'body' => 'required|min:5|max:65535',
-            'is_premium' => ''
+            'is_premium' => '',
+            'category' => 'required|array',
+            'category.*' => 'required|exists:categories,id'
         ]);
 
         $post->update([

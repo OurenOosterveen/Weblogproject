@@ -14,7 +14,7 @@
         <form action={{ route('comment.post', ['post' => $post->id]) }} method="post">
             @csrf
             <label for="comment">Write a comment</label> <br>
-            <textarea name="comment" id="comment" cols="30" rows="5"></textarea>
+            <textarea name="comment" id="comment" cols="30" rows="5"></textarea> <br>
             <input type="submit" value="Post comment">
         </form>
 
