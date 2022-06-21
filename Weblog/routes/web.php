@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -67,6 +68,7 @@ Route::post('/post/{post}', [
 // 
 //      USER ROUTES
 //
+
 Route::get('/register', [
     UserController::class, 
     'create'
@@ -96,3 +98,17 @@ Route::get('/user/overview', [
     UserController::class,
     'overview'
 ])->name('user.overview');
+
+// 
+//      CATEGORIES ROUTES
+//
+
+Route::get('/category/create', [
+    CategoryController::class,
+    "create"
+])->name('category.create');
+
+Route::post('/category/store', [
+    CategoryController::class,
+    "store"
+])->name('category.store');

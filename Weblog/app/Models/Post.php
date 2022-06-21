@@ -11,7 +11,7 @@ class Post extends Model
 
     protected $fillable = ['text', 'body', 'is_premium', 'user_id'];
 
-    protected $with = ['user'];
+    protected $with = ['user', 'categories'];
 
     public function user() {
         return $this->belongsTo(User::class);
@@ -19,5 +19,9 @@ class Post extends Model
 
     public function comments() {
         return $this->hasMany(Comment::class);
+    }
+
+    public function categories() {
+        return $this->belongsToMany(Category::class);
     }
 }

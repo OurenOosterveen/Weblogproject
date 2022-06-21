@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -51,7 +52,8 @@ class PostController extends Controller
     public function edit(Post $post) {
         if (auth()->id() == $post->user_id){
             return view('posts/edit', [
-                'post' => $post
+                'post' => $post,
+                'categories' => Category::all()
             ]);
         } else {
             return redirect()->back();
@@ -71,6 +73,10 @@ class PostController extends Controller
             'is_premium' => request()->has('is_premium')
         ]);
 
+        foreach (request('category') as $category){
+            $post->categories()->attach($category);
+        }
+        
         return redirect(route('user.overview'));
     }
 
