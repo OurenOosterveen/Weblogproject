@@ -14,12 +14,15 @@ class PostController extends Controller
 
     public function index() {
         return view('posts/index', [
-            'posts' => Post::all()->sortByDesc('created_at')
+            'posts' => Post::all()->sortByDesc('created_at'),
+            'categories' => Category::all()
         ]);
     }
 
     public function create() {
-        return view('posts/create');
+        return view('posts/create', [
+            'categories' => Category::all()
+        ]);
     }
 
     public function store() {
@@ -34,7 +37,12 @@ class PostController extends Controller
         $post->body = request('body');
         $post->is_premium = request()->has('is_premium');
         $post->user_id = Auth::id();
+
         $post->save();
+
+        foreach (request('category') as $category) {
+            $post->categories()->attach($category);
+        }
 
         return redirect(route('posts.index'));
     }

@@ -7,7 +7,10 @@
             <small>
                 Posted {{ $post->created_at->diffForHumans() }}
                 by {{ $post->user->username }}
-            </small>
+            </small> <br>
+            @foreach ($post->categories as $category)
+                <small class="category"> {{ $category->name }} </small>
+            @endforeach
             <p>
                 {{ $post->body }}
             </p>
