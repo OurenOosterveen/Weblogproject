@@ -13,7 +13,11 @@
         <label for="category"><strong>Select Category :</strong></label>
         <select class="category-select2" multiple="multiple" name="category[]">
             @foreach ($categories as $category)
-                <option value={{$category->id}}>{{$category->name}}</option>
+                <option value={{$category->id}}
+                    @if ($post->categories->contains($category->id))
+                        selected='selected'
+                    @endif
+                    >{{$category->name}}</option>
             @endforeach
         </select><br>
 

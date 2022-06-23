@@ -100,8 +100,18 @@ class PostController extends Controller
             'is_premium' => request()->has('is_premium')
         ]);
 
+        // Attach only new categories
         foreach (request('category') as $category){
-            $post->categories()->attach($category);
+            if (!$post->categories->contains($category)) {
+                $post->categories()->attach($category);
+            }
+        }
+
+        // Delete any categories not selected (form autoselects the categories attached to a Post)
+        foreach ($post->categories as $category){
+            if (!in_array($category->id, request('category'))) {
+                $post->categories()->detach($category->id);
+            }
         }
 
         if (request()->file('image')) {
