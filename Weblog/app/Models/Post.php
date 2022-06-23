@@ -11,7 +11,7 @@ class Post extends Model
 
     protected $fillable = ['text', 'body', 'is_premium', 'user_id'];
 
-    protected $with = ['user', 'categories'];
+    protected $with = ['user', 'categories', 'image'];
 
     public function user() {
         return $this->belongsTo(User::class);

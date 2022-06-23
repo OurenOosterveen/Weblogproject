@@ -1,13 +1,13 @@
 <x-layout>
-    <form action={{ route('post.update',['post' => $post->id])}} method="post">
+    <form action={{ route('post.update',['post' => $post->id])}} method="post" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
-        <label for="title">Title</label>
+        <label for="title"> <strong> Title: </strong></label>
         <input type="text" name="title" id="title" value={{$post->title}}>
         <br>
 
-        <label for="body">Post body</label>
+        <label for="body"><strong> Post body: </strong></label>
         <textarea name="body" id="body" cols="50" rows="10">{{$post->body}}</textarea> <br>
 
         <label for="category"><strong>Select Category :</strong></label>
@@ -17,12 +17,21 @@
             @endforeach
         </select><br>
 
-        <label for="is_premium">Premium members only?</label>
+        <label><strong>Add image: </strong></label>
+        <input type="file" class="form-control" name="image">  <br>
+
+        <label for="is_premium"> <strong> Premium members only? </strong></label>
         <input type="checkbox" name="is_premium" id="is_premium" {{$post->is_premium ? "checked" : ''}}>
         <br>
 
         <input type="submit" value="Update post">
     </form>
+
+    <ul>
+        @foreach ($errors->all() as $e)
+            <li> {{ $e }}</li>
+        @endforeach 
+    </ul>
 
     <form action={{route('post.delete', ['post' => $post->id])}} method="post">
         @csrf

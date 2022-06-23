@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Image;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +90,8 @@ class PostController extends Controller
             'body' => 'required|min:5|max:65535',
             'is_premium' => '',
             'category' => 'required|array',
-            'category.*' => 'required|exists:categories,id'
+            'category.*' => 'required|exists:categories,id', 
+            'image' => 'nullable|image|max:2048'
         ]);
 
         $post->update([
@@ -100,6 +102,19 @@ class PostController extends Controller
 
         foreach (request('category') as $category){
             $post->categories()->attach($category);
+        }
+
+        if (request()->file('image')) {
+            $file = request()->file('image');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('public/image'), $filename);
+
+            $image = new Image([
+                'url' => $filename, 
+                'post_id' => $post->id
+            ]);
+
+            $image->save();
         }
         
         return redirect(route('user.overview'));

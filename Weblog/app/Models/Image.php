@@ -9,6 +9,8 @@ class Image extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['url', 'post_id'];
+
     public function post() {
         return $this->belongsTo(Post::class);
     }

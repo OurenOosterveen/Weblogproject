@@ -31,6 +31,11 @@
             <p>
                 {{ $post->body }}
             </p>
+
+            @if ($post->image)
+                <img src="{{ url('public/image/'.$post->image->url) }}" style="height: 100px; width: 150px;">
+            @endif
+            
         </div>
     @endforeach
 </x-layout>
