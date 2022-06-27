@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -118,3 +119,11 @@ Route::post('/category/store', [
     CategoryController::class,
     "store"
 ])->name('category.store');
+
+
+
+
+Route::post('/posts/mail', [
+    EmailController::class,
+    'send'
+])->name('mail.send');

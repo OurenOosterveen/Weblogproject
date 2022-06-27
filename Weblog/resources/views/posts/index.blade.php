@@ -1,4 +1,14 @@
 <x-layout>
+
+    <div class="sendmail">
+        <form action={{ route('mail.send') }} method="post">
+            @csrf
+            <h1>Get a weekly digest of our posts here</h1>
+            <input type="email" name="email" id="email" placeholder="Your emailadress">
+            <input type="submit" value="Get weekly digest">
+        </form>
+    </div>
+
     <div class="searchbar">
         <form action={{route('posts.index.filtered')}} method="post">
             @csrf

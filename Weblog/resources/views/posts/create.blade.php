@@ -1,5 +1,5 @@
 <x-layout>
-    <form action={{ route('posts.store') }} method="post">
+    <form action={{ route('posts.store') }} method="post" enctype="multipart/form-data">
         @csrf
     
         <label for="title">Title</label>
@@ -16,6 +16,9 @@
                 <option value={{$category->id}}>{{$category->name}}</option>
             @endforeach
         </select><br>
+
+        <label><strong>Add image: </strong></label>
+        <input type="file" class="form-control" name="image">  <br>
 
         <label for="is_premium">Premium members only?</label>
         <input type="checkbox" name="is_premium" id="is_premium">

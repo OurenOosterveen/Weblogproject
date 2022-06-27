@@ -11,26 +11,27 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    
+    protected $postValidationRules = [
+        'title' => 'required|min:5|max:255',
+        'body' => 'required|min:5|max:65535',
+        'is_premium' => '',
+        'category' => 'required|array',
+        'category.*' => 'required|exists:categories,id', 
+        'image' => 'nullable|image|max:2048'
+    ];
 
     public function index() {
         return view('posts/index', [
             'posts' => Post::latest()->get(),
             'categories' => Category::all()
         ]);
-
-        // Post::latest()->filter(request(['search']))->get()
     }
 
     public function filteredIndex() {
         return view('posts/index', [
-            // 'posts' => Post::all()->sortByDesc('created_at'),
-            // 'categories' => Category::all()
             'posts' => Post::latest()->filter(request(['category']))->get(),
             'categories' => Category::all()
         ]);
-
-        // Post::latest()->filter(request(['search']))->get()
     }
 
     public function create() {
@@ -40,13 +41,7 @@ class PostController extends Controller
     }
 
     public function store() {
-        request()->validate([
-            'title' => 'required|min:5|max:255',
-            'body' => 'required|min:5|max:65535',
-            'is_premium' => '',
-            'category' => 'required|array',
-            'category.*' => 'required|exists:categories,id'
-        ]);
+        request()->validate($this->postValidationRules);
 
         $post = new Post();
         $post->title = request('title');
@@ -59,6 +54,8 @@ class PostController extends Controller
         foreach (request('category') as $category) {
             $post->categories()->attach($category);
         }
+
+        $this->insertImage($post);
 
         return redirect(route('posts.index'));
     }
@@ -85,14 +82,7 @@ class PostController extends Controller
     }
 
     public function update(Post $post) {
-        request()->validate([
-            'title' => 'required|min:5|max:255',
-            'body' => 'required|min:5|max:65535',
-            'is_premium' => '',
-            'category' => 'required|array',
-            'category.*' => 'required|exists:categories,id', 
-            'image' => 'nullable|image|max:2048'
-        ]);
+        request()->validate($this->postValidationRules);
 
         $post->update([
             'title' => request('title'),
@@ -114,7 +104,29 @@ class PostController extends Controller
             }
         }
 
+        // Add image
+        $this->insertImage($post);
+        
+        return redirect(route('user.overview'));
+    }
+
+    public function delete(Post $post) {
+        $post->comments()->delete();
+        $post->categories()->detach();
+        $post->image()->delete();
+        $post->delete();
+
+        return redirect(route('user.overview'));
+    }
+
+
+    protected function insertImage(Post $post) {
         if (request()->file('image')) {
+            // Delete any previous image, before attaching new one
+            if ($post->image) {
+                $post->image()->delete();
+            }
+
             $file = request()->file('image');
             $filename = date('YmdHi') . $file->getClientOriginalName();
             $file->move(public_path('public/image'), $filename);
@@ -126,14 +138,5 @@ class PostController extends Controller
 
             $image->save();
         }
-        
-        return redirect(route('user.overview'));
-    }
-
-    public function delete(Post $post) {
-        $post->comments()->delete();
-        $post->delete();
-
-        return redirect(route('user.overview'));
     }
 }

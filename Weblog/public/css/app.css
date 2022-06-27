@@ -2,7 +2,7 @@
     font-family: sans-serif;
 }
 
-.post, .searchbar {
+.post, .searchbar, .sendmail {
     border-radius:15px;
     background: rgb(5, 166, 219);
     padding: 3px;

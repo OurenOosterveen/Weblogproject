@@ -71,8 +71,7 @@ class UserController extends Controller
         return view('users/overview', [
             'posts' => Post::where('user_id', Auth::id())
                 ->orderByDesc('created_at')
-                ->get(),
-            
+                ->get()
         ]);
     }
 }
