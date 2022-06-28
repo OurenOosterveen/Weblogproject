@@ -17,6 +17,10 @@
             <span>   |   </span>
             <a href={{ route('user.overview') }}>Personal overview</a>
             <span>   |   </span>
+            @if (!auth()->user()->is_premium)
+            <a href={{ route('user.member') }}>Become premium member</a>
+            <span>   |   </span>
+            @endif
             <a href={{ route('user.logout') }}> Log out </a>
             <span>   |   </span>
         </div>

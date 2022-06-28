@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -105,6 +106,16 @@ Route::get('/user/overview', [
     UserController::class,
     'overview'
 ])->name('user.overview');
+
+Route::get('/user/member', [
+    UserController::class,
+    'member'
+])->name('user.member');
+
+Route::post('/user/member', [
+    UserController::class,
+    'setMember'
+])->name('user.setMember');
 
 // 
 //      CATEGORIES ROUTES

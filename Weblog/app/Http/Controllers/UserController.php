@@ -49,7 +49,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             request()->session()->regenerate();
  
-            return redirect(route('posts.index'));
+            return redirect(route('user.overview'));
         }
  
         return back()->withErrors([
@@ -73,5 +73,23 @@ class UserController extends Controller
                 ->orderByDesc('created_at')
                 ->get()
         ]);
+    }
+
+    public function member() {
+        return view('users/member', [
+
+        ]);
+    }
+
+    public function setMember() {
+        request()->validate([
+            "confirm" => "required"
+        ]);
+
+        $user = request()->user();
+        $user->is_premium = true;
+        $user->save();
+
+        return redirect(route('posts.index'));
     }
 }
