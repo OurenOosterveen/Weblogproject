@@ -19,7 +19,7 @@
                 <input type="submit" value="Post comment">
             </form>
 
-            @foreach ($comments as $comment)
+            @foreach ($post->comments as $comment)
                 <div class="comment-card">
                     <small>
                         Posted {{ $comment->created_at->diffForHumans() }}

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Image;
@@ -11,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    // TODO :: validatie afhandelen in Request
+    // TODO check :: validatie afhandelen in Request
     protected $postValidationRules = [
         'title' => 'required|min:5|max:255',
         'body' => 'required|min:5|max:65535',
@@ -44,25 +46,21 @@ class PostController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(StorePostRequest $request)
     {
-        // TODO :: validatie afhandelen in Request
-        request()->validate($this->postValidationRules);
-
-        // TODO :: gevalideerde data gebruiken
-        $post = new Post();
-        $post->title = request('title');
-        $post->body = request('body');
-        $post->is_premium = request()->has('is_premium');
-        $post->user_id = Auth::id();
+        // TODO check :: validatie afhandelen in Request
+        $validated = $request->validated();
+        $post = new Post([
+            'title' => $validated['title'],
+            'body' => $validated['body'],
+            'is_premium' => $validated['is_premium'] ?? false ? true : false, // check if exsists, if so true, else false
+            'user_id' => Auth::id()
+        ]);
 
         $post->save();
 
-        // TODO :: volgens mij kun je attach() een array van ids geven, dit zou de foreach overbodig maken
-        foreach (request('category') as $category) {
-            $post->categories()->attach($category);
-        }
-
+        // TODO check :: volgens mij kun je attach() een array van ids geven, dit zou de foreach overbodig maken
+        $post->categories()->attach($validated['category']);
         $this->insertImage($post);
 
         return redirect(route('posts.index'));
@@ -71,19 +69,14 @@ class PostController extends Controller
     public function view(Post $post)
     {
         return view('posts/view', [
-            'post' => $post,
-            'comments' =>
-            // TODO :: je kunt comments "eagerloaden" bij de post https://laravel.com/docs/9.x/eloquent-relationships#eager-loading
-            Comment::where('post_id', $post->id)
-                ->orderByDesc('created_at')
-                ->get()
+            'post' => $post
         ]);
     }
 
     public function edit(Post $post)
     {
-        // TODO :: onderstaande authenticatie kan je mooier oplossen door policie te gebruiken
-        if (auth()->id() == $post->user_id) {
+        // TODO check :: onderstaande authenticatie kan je mooier oplossen door policie te gebruiken
+        if ($this->authorize('update', $post)) {
             return view('posts/edit', [
                 'post' => $post,
                 'categories' => Category::all()
@@ -93,31 +86,20 @@ class PostController extends Controller
         }
     }
 
-    public function update(Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        // TODO :: validatie afhandelen in Request
-        request()->validate($this->postValidationRules);
+        // TODO check :: validatie afhandelen in Request
+        $validated = $request->validated();
 
         $post->update([
-            'title' => request('title'),
-            'body' => request('body'),
-            'is_premium' => request()->has('is_premium')
+            'title' => $validated['title'],
+            'body' => $validated['body'],
+            'is_premium' => $validated['is_premium'] ?? false ? true : false
         ]);
 
         // Attach only new categories
-        // TODO :: kijk is naar $post->categories()->sync() 
-        foreach (request('category') as $category) {
-            if (!$post->categories->contains($category)) {
-                $post->categories()->attach($category);
-            }
-        }
-
-        // Delete any categories not selected (form autoselects the categories attached to a Post)
-        foreach ($post->categories as $category) {
-            if (!in_array($category->id, request('category'))) {
-                $post->categories()->detach($category->id);
-            }
-        }
+        // TODO check :: kijk is naar $post->categories()->sync() 
+        $post->categories()->sync($validated['category']);
 
         // Add image
         $this->insertImage($post);
