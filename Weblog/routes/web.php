@@ -23,16 +23,8 @@ use Illuminate\Support\Facades\Route;
 //
 //      POST ROUTES
 //
-Route::get('/', [
-    PostController::class, 
-    'index'
-])->name('posts.index');
-
-Route::post('/', [
-    PostController::class,
-    'filteredIndex'
-]
-)->name('posts.index.filtered');
+Route::get('/', [PostController::class, 'index'])->name('posts.index');
+Route::post('/', [PostController::class, 'filteredIndex'])->name('posts.index.filtered');
 
 Route::get('/create', [
     PostController::class,
@@ -78,7 +70,7 @@ Route::post('/post/{post}', [
 //
 
 Route::get('/register', [
-    UserController::class, 
+    UserController::class,
     'create'
 ])->name('user.create')->middleware('guest');
 
@@ -88,7 +80,7 @@ Route::post('/user/register', [
 ])->name('user.register')->middleware('guest');
 
 Route::get('/user/signin', [
-    UserController::class, 
+    UserController::class,
     'signIn'
 ])->name('user.signin')->middleware('guest');
 

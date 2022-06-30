@@ -9,19 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function create () {
+    public function create()
+    {
         return view('users/create');
     }
 
-    public function signIn() {
+    public function signIn()
+    {
         return view('users/login');
     }
 
-    public function logout() {
-
+    public function logout()
+    {
     }
 
-    public function register() {
+    public function register()
+    {
+        // TODO :: validatie afhandelen in Request
         $attr = request()->validate([
             'username' => 'required|unique:users,username|min:5|max:32',
             'email' => 'required|email|unique:users,email',
@@ -40,7 +44,8 @@ class UserController extends Controller
         return redirect(route('posts.index'));
     }
 
-    public function login() {
+    public function login()
+    {
         $credentials = request()->validate([
             'email' => 'required|email|exists:users,email',
             'password' => 'required'
@@ -48,26 +53,28 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             request()->session()->regenerate();
- 
+
             return redirect(route('user.overview'));
         }
- 
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
-    public function logoutuser() {
+    public function logoutuser()
+    {
         Auth::logout();
 
         request()->session()->invalidate();
- 
+
         request()->session()->regenerateToken();
-     
+
         return redirect(route('posts.index'));
     }
 
-    public function overview() {
+    public function overview()
+    {
         return view('users/overview', [
             'posts' => Post::where('user_id', Auth::id())
                 ->orderByDesc('created_at')
@@ -75,13 +82,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function member() {
-        return view('users/member', [
-
-        ]);
+    public function member()
+    {
+        return view('users/member', []);
     }
 
-    public function setMember() {
+    public function setMember()
+    {
         request()->validate([
             "confirm" => "required"
         ]);
