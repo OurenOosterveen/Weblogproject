@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // TODO :: seeder toevoegen!
+        // TODO check :: seeder toevoegen!
         // \App\Models\User::factory(10)->create();
 
         Post::factory(10)
