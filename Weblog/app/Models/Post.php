@@ -37,9 +37,12 @@ class Post extends Model
     public function scopeFilter($query, array $filters)
     {
         // TODO check :: if statement mag hier weg
-        $categories = $filters["category"];
-        $query->whereHas('categories', function ($query) use ($categories) {
-            $query->whereIn('id', $categories);
-        });
+        // mijn todo was niet helemaal goed, zo zou hij moeten
+        if ($filters['category'] ?? false) {
+            $categories = $filters['category'];
+            $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
+            });
+        }
     }
 }

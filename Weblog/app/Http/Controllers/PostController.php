@@ -13,15 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    // TODO check :: validatie afhandelen in Request
-    protected $postValidationRules = [
-        'title' => 'required|min:5|max:255',
-        'body' => 'required|min:5|max:65535',
-        'is_premium' => '',
-        'category' => 'required|array',
-        'category.*' => 'required|exists:categories,id',
-        'image' => 'nullable|image|max:2048'
-    ];
 
     public function index()
     {
@@ -50,14 +41,14 @@ class PostController extends Controller
     {
         // TODO check :: validatie afhandelen in Request
         $validated = $request->validated();
-        $post = new Post([
+
+        // TODO :: onderstaande is mooiste manier, het scheelt die ->save()
+        $post = Post::create([
             'title' => $validated['title'],
             'body' => $validated['body'],
             'is_premium' => $validated['is_premium'] ?? false ? true : false, // check if exsists, if so true, else false
             'user_id' => Auth::id()
         ]);
-
-        $post->save();
 
         // TODO check :: volgens mij kun je attach() een array van ids geven, dit zou de foreach overbodig maken
         $post->categories()->attach($validated['category']);
@@ -76,14 +67,12 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         // TODO check :: onderstaande authenticatie kan je mooier oplossen door policie te gebruiken
-        if ($this->authorize('update', $post)) {
-            return view('posts/edit', [
-                'post' => $post,
-                'categories' => Category::all()
-            ]);
-        } else {
-            return redirect()->back();
-        }
+        if (!$this->authorize('update', $post)) return redirect()->back();
+
+        return view('posts/edit', [
+            'post' => $post,
+            'categories' => Category::all()
+        ]);
     }
 
     public function update(UpdatePostRequest $request, Post $post)
