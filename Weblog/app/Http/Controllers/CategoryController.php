@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -14,19 +15,14 @@ class CategoryController extends Controller
         return view('/categories/create');
     }
 
-    public function store()
+    public function store(CreateCategoryRequest $request)
     {
-        // TODO :: validatie graag afhandelen in een Request
-        request()->validate([
-            'name' => 'required|unique:categories,name|min:3|max:255'
+        // TODO check :: validatie graag afhandelen in een Request
+        $validated = $request->validated();
+        // TODO check :: Kijk is of je Category::creat() kunt gebruiken
+        Category::create([
+            'name' => ucfirst($validated['name'])
         ]);
-        // TODO :: Kijk is of je Category::creat() kunt gebruiken
-        $category = new Category();
-        // TODO :: gevalideerde data gebruiken
-        $category->name = ucfirst(request('name'));
-
-        $category->save();
-
-        return redirect(route('category.create'));
+        return redirect(route('category.create'))->with('succes', 'Category succesfully added!');
     }
 }

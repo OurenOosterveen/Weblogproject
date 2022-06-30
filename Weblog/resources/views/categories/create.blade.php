@@ -1,5 +1,8 @@
 <x-layout>
     <div>
+        @if (session('succes'))
+            {{ session('succes') }}
+        @endif
         <form action={{route('category.store')}} method="post">
             @csrf
 
