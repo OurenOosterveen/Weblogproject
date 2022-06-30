@@ -12,7 +12,7 @@ class CommentController extends Controller
 {
     public function post(CreateCommentRequest $request, Post $post)
     {
-        // TODO :: validatie afhandelen in een Request
+        // TODO check :: validatie afhandelen in een Request
         $validated = $request->validated();
         Comment::create([
             'post_id' => $post->id,

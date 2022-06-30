@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\SetMemberUserRequest;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,35 +27,25 @@ class UserController extends Controller
     {
     }
 
-    public function register()
+    public function register(RegisterUserRequest $request)
     {
-        // TODO :: validatie afhandelen in Request
-        $attr = request()->validate([
-            'username' => 'required|unique:users,username|min:5|max:32',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:8|max:21',
-            'password_confirmation' => 'required'
-        ]);
+        // TODO check :: validatie afhandelen in Request, gedaan voor de hele UserController
+        $validated = $request->validated();
 
-        $user = new User([
-            'username' => $attr['username'],
-            'email' => $attr['email'],
-            'password' => bcrypt($attr['password'])
+        User::create([
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password'])
         ]);
-
-        $user->save();
 
         return redirect(route('posts.index'));
     }
 
-    public function login()
+    public function login(LoginUserRequest $request)
     {
-        $credentials = request()->validate([
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required'
-        ]);
+        $validated = $request->validated();
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($validated)) {
             request()->session()->regenerate();
 
             return redirect(route('user.overview'));
@@ -87,11 +81,9 @@ class UserController extends Controller
         return view('users/member', []);
     }
 
-    public function setMember()
+    public function setMember(SetMemberUserRequest $request)
     {
-        request()->validate([
-            "confirm" => "required"
-        ]);
+        $validated = $request->validated();
 
         $user = request()->user();
         $user->is_premium = true;

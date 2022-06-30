@@ -36,14 +36,10 @@ class Post extends Model
 
     public function scopeFilter($query, array $filters)
     {
-        // TODO :: if statement mag hier weg
-        if (isset($filters["category"])) {
-            $categories = $filters["category"];
-            $query->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('id', $categories);
-            });
-        } else {
-            dd($filters);
-        }
+        // TODO check :: if statement mag hier weg
+        $categories = $filters["category"];
+        $query->whereHas('categories', function ($query) use ($categories) {
+            $query->whereIn('id', $categories);
+        });
     }
 }
